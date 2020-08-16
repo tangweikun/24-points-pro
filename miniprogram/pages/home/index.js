@@ -1,7 +1,6 @@
 const app = getApp();
 import { shareAppMessage } from '../../utils/index';
 import { RULE, GAMEPLAY } from '../../constants/index.js';
-import { post } from '../../api/index';
 
 Page({
   data: {

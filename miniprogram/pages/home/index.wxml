@@ -8,7 +8,7 @@
       style="{{item.isHot ? 'border-color: #45C277' : ''}}"
       class="{{item.isReady ? 'home-circle' : 'home-circle-disable'}}"
       bindtap="_goNewPage"
-      wx:key="{{index}}"
+      wx:key="index"
       data-url="{{item.url}}"
       data-ready="{{item.isReady}}"
       data-index="{{index}}"

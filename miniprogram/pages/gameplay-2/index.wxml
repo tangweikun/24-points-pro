@@ -19,7 +19,7 @@
     <view class='card-wrapper'>
       <view
         wx:for="{{cards}}"
-        wx:key="{{index}}"
+        wx:key="index"
         class="card THEME1-{{item.state}}"
         bind:touchstart="_selectCard"
         id="{{item.value}}"
@@ -46,7 +46,7 @@
     <view class='operator-wrapper'>
       <custom-operator
         wx:for="{{operators}}"
-        wx:key="{{index}}"
+        wx:key="index"
         text="{{OPERATORS_HASH[item]}}"
         theme="{{selectedOperator === item ? 'active' : 'normal'}}"
         bind:touchstart='_selectOperator'
