@@ -25,6 +25,10 @@ Page({
 
   onShareAppMessage: shareAppMessage,
 
+  _onAdd: function() {
+
+  },
+
   _goProfile: function() {
     wx.navigateTo({ url: '/pages/index/index' });
   },
@@ -104,17 +108,29 @@ Page({
 
     const isFinish =
       nextState.cards.filter(({ state }) => state === 'disable').length === 3;
-    const openid = app.globalData.openid;
 
-    if (isFinish && openid) {
+    if (isFinish) {
       const isCorrect = nextState.selectedCard.value === 24;
-      post('increaseAnswersCount', { openid, isCorrect });
-      post('24-points/add_question', {
-        openid,
-        isCorrect,
-        question: initialCards.map(x => x.value),
-        gameplay: 'TYPE_0',
-      });
+      const db = wx.cloud.database()
+      db.collection('game0_record').add({
+        data: {
+          isCorrect
+        }
+      })
+      db.collection('question').add({
+        data:{
+          isCorrect,
+          question: initialCards.map(x => x.value),
+          gameplay: 'TYPE_0',
+        }
+      })
+      // post('increaseAnswersCount', { openid, isCorrect });
+      // post('24-points/add_question', {
+      //   openid,
+      //   isCorrect,
+      //   question: initialCards.map(x => x.value),
+      //   gameplay: 'TYPE_0',
+      // });
     }
 
     if (isFinish && nextState.selectedCard.value === 24) {

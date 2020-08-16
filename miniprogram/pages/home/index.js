@@ -6,12 +6,12 @@ Page({
   data: {
     isAuthorized: false,
     gamePlay: [
-      // {
-      //   text: '随便玩玩',
-      //   url: '/pages/gameplay-0/index',
-      //   isReady: true,
-      //   isHot: false,
-      // },
+      {
+        text: '随便玩玩',
+        url: '/pages/gameplay-0/index',
+        isReady: true,
+        isHot: false,
+      },
       // {
       //   text: '排行榜',
       //   url: '/pages/ranking/index',
