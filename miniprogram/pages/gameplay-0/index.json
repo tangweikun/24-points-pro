@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "随便玩玩",
+  "usingComponents": {
+    "custom-button": "../../components/button/index",
+    "custom-card": "../../components/card/index",
+    "custom-operator": "../../components/operator/index"
+  }
+}

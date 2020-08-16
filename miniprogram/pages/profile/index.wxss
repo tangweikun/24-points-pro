@@ -1,0 +1,60 @@
+page {
+  background: #7fd6af;
+}
+
+.avatar {
+  border-radius: 200rpx;
+  box-sizing: border-box;
+  border: 10rpx solid #ffffff;
+}
+
+.avatar-wrapper {
+  padding: 50rpx;
+}
+
+.ranking-wrapper {
+  padding: 20rpx;
+  width: 100%;
+  border-radius: 30rpx;
+  box-sizing: border-box;
+  border: 5rpx solid #ffffff;
+  font-size: 36rpx;
+  margin-bottom: 40rpx;
+}
+
+.ranking-title {
+  text-align: center;
+}
+
+.ranking-detail {
+  display: flex;
+}
+
+.ranking-detail-left {
+  flex: 1;
+}
+
+.ranking-detail-right {
+  flex: 1;
+  text-align: right;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+}
+
+.profile-authorize {
+  width: 90%;
+}
+
+.profile-detail {
+  padding: 20rpx;
+}
+
+.feedback {
+  font-size: 28rpx;
+  padding-top: 100rpx;
+}

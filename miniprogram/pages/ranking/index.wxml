@@ -1,0 +1,48 @@
+<view class="home-container">
+  <view class="fixed-wrapper">
+    <view class="tab-wrapper">
+      <view data-tabindex="{{1}}" bindtap="_handleClickTab" class="tab-left {{tabIndex === 1 ? 'tab-active' : 'tab-normal'}}">分秒必争</view>
+      <view data-tabindex="{{2}}" bindtap="_handleClickTab" class="tab-right {{tabIndex === 2 ? 'tab-active' : 'tab-normal'}}">过关斩将</view>
+    </view>
+    <view class="my-rank-wrapper">
+      <custom-card
+        theme="THEME1"
+        wx:if="{{tabIndex === 1 && myRankInfo1 !== null}}"
+        rank="{{myRank1 + 1}}"
+        avatarUrl="{{myRankInfo1.userInfo.avatarUrl}}"
+        nickName="{{myRankInfo1.userInfo.nickName}}"
+        record="{{myRankInfo1.record}}"
+      >
+      </custom-card>
+    </view>
+
+    <view class="my-rank-wrapper">
+      <custom-card
+        theme="THEME1"
+        wx:if="{{tabIndex === 2 && myRankInfo2 !== null}}"
+        rank="{{myRank2 + 1}}"
+        avatarUrl="{{myRankInfo2.userInfo.avatarUrl}}"
+        nickName="{{myRankInfo2.userInfo.nickName}}"
+        record="{{myRankInfo2.record}}"
+      >
+      </custom-card>
+    </view>
+  </view>
+
+
+  <scroll-view class="scroll-wrapper" scroll-y>
+    <custom-card
+      theme="THEME2"
+      wx:for="{{tabIndex === 1 ? rankingList1 : rankingList2}}"
+      wx:key="{{index}}"
+      rank="{{index + 1}}"
+      avatarUrl="{{item.userInfo.avatarUrl}}"
+      nickName="{{item.userInfo.nickName}}"
+      record="{{item.record}}"
+    >
+    </custom-card>
+  </scroll-view>
+  <!-- <view class="ad-wrapper">
+    <ad unit-id="adunit-e989c465de072824"></ad>
+  </view> -->
+</view>

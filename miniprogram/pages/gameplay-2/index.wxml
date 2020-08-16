@@ -1,0 +1,66 @@
+<view class="page">
+  <view wx:if="{{gameOver}}" class='expression-wrapper'>
+      <view class="button-wrapper">
+        <button type="primary" bind:touchstart="_handleStart">继续挑战</button>
+      </view>
+
+      <view class="challenge-record" wx:if="{{gameOver}}">
+        <view>挑战成绩: {{record}}</view>
+      </view>
+      <view class="challenge-recommend" wx:if="{{gameOver}}">推荐算法: {{recommendSolution}}</view>
+  </view>
+
+  <view wx:else class='wrapper'>
+    <view class="challenge-header">
+      <custom-button theme="THEME-2" text="倒计时: {{countdown}}"></custom-button>
+      <custom-button theme="THEME-2" text="已完成: {{record}}"></custom-button>
+    </view>
+
+    <view class='card-wrapper'>
+      <view
+        wx:for="{{cards}}"
+        wx:key="{{index}}"
+        class="card THEME1-{{item.state}}"
+        bind:touchstart="_selectCard"
+        id="{{item.value}}"
+        data-value="{{item.value}}"
+        data-index="{{index}}"
+      >
+        <view wx:if="{{item.alias[0] !== 0 || !item.alias[1] }}" class="integer">
+          {{item.alias[0]}}
+        </view>
+        <view class="fractional" wx:if="{{item.alias[1]}}">
+          <view class="numerator">
+            {{item.alias[1]}}
+          </view>
+          <view class="division">
+            -
+          </view>
+          <view class="denominator">
+            {{item.alias[2]}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class='operator-wrapper'>
+      <custom-operator
+        wx:for="{{operators}}"
+        wx:key="{{index}}"
+        text="{{OPERATORS_HASH[item]}}"
+        theme="{{selectedOperator === item ? 'active' : 'normal'}}"
+        bind:touchstart='_selectOperator'
+        id="{{item}}"
+        data-value="{{item}}"
+        data-index="{{index}}"
+      >
+      </custom-operator>
+    </view>
+
+    <view class="footer">
+      <custom-button wx:if="{{!isFinish}}" text='重置' bindtap='_reset'></custom-button>
+    </view>
+  </view>
+
+  <ad class="ad-wrapper" unit-id="adunit-dc2439eb6f8a070b"></ad>
+</view>

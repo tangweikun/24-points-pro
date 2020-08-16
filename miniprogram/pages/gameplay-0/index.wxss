@@ -1,0 +1,68 @@
+@import '../../style/common/gameplay.wxss';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 160rpx 0 60rpx;
+}
+
+.expression-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50rpx;
+  height: 760rpx;
+  flex-direction: column;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.challenge-record {
+  font-size: 40rpx;
+  color: #6ddac8;
+  padding: 40rpx;
+}
+
+.challenge-recommend {
+  font-size: 40rpx;
+  color: #6ddac8;
+  padding: 0 0 60rpx;
+}
+
+.recommend {
+  position: fixed;
+  right: 50rpx;
+  top: 50rpx;
+  font-size: 24rpx;
+  background: #6ddac8;
+  color: #ffffff;
+  width: 140rpx;
+  height: 50rpx;
+  text-align: center;
+  line-height: 50rpx;
+  border-radius: 50rpx;
+}
+
+.profile {
+  position: fixed;
+  left: 50rpx;
+  top: 50rpx;
+  font-size: 24rpx;
+  background: #6ddac8;
+  color: #ffffff;
+  width: 140rpx;
+  height: 50rpx;
+  text-align: center;
+  line-height: 50rpx;
+  border-radius: 50rpx;
+}
+
+.ad-wrapper {
+  position: fixed;
+  bottom: 0;
+}

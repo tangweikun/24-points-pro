@@ -1,0 +1,60 @@
+<view>
+  <view wx:if="{{isFinish}}" class='expression-wrapper'>
+    <view class="challenge-record">再接再厉!</view>
+    <view class="challenge-recommend">推荐算法: {{recommendSolution}}</view>
+  </view>
+
+  <view wx:else class='wrapper'>
+    <view class="recommend" bindtap="_showRule">规则</view>
+    <view class='profile' bindtap="_goProfile">更多玩法</view>
+    <!-- <view class='recommend' bindtap="_showSolution">偷瞄算法</view> -->
+    <view class='card-wrapper'>
+      <view
+        wx:for="{{cards}}"
+        wx:key="{{index}}"
+        class="card THEME1-{{item.state}}"
+        bind:touchstart="_selectCard"
+        id="{{item.value}}"
+        data-state="{{item.state}}"
+        data-value="{{item.value}}"
+        data-index="{{index}}"
+      >
+        <view wx:if="{{item.alias[0] !== 0 || !item.alias[1] }}" class="integer">
+          {{item.alias[0]}}
+        </view>
+        <view class="fractional" wx:if="{{item.alias[1]}}">
+          <view class="numerator">
+            {{item.alias[1]}}
+          </view>
+          <view class="division">
+            -
+          </view>
+          <view class="denominator">
+            {{item.alias[2]}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class='operator-wrapper'>
+      <custom-operator
+        wx:for="{{operators}}"
+        wx:key="{{index}}"
+        text="{{OPERATORS_HASH[item]}}"
+        theme="{{selectedOperator === item ? 'active' : 'normal'}}"
+        bind:touchstart='_selectOperator'
+        id="{{item}}"
+        data-value="{{item}}"
+        data-index="{{index}}"
+      >
+      </custom-operator>
+    </view>
+  </view>
+
+  <view class="footer">
+    <custom-button text="下一题" bindtap='_skip'></custom-button>
+    <custom-button wx:if="{{!isFinish}}" text="重置" bindtap='_reset'></custom-button>
+  </view>
+
+  <ad class="ad-wrapper" unit-id="adunit-e989c465de072824"></ad>
+</view>
