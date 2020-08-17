@@ -1,3 +1,5 @@
+// 分秒必争
+
 const app = getApp();
 import {
   generateCardsAndRecommendSolution,
@@ -6,7 +8,6 @@ import {
   shareAppMessage,
 } from '../../utils/index.js';
 import { OPERATORS, OPERATORS_HASH } from '../../constants/index.js';
-import { post } from '../../api/index';
 
 const cardsAndRecommendSolution = generateCardsAndRecommendSolution();
 
@@ -31,46 +32,44 @@ Page({
 
   onShareAppMessage: shareAppMessage,
 
-  onUnload: function() {
-    const { openid, userInfo } = app.globalData;
+  onUnload: function () {
+    const { userInfo } = app.globalData;
     const { gameOver, record, totalTime } = this.data;
 
     if (!gameOver && record > 0) {
-      post('24-points/add_challenge', {
-        openid,
-        userInfo,
-        record,
-        totalTime,
-        gameplay: 'TYPE_1',
+      const db = wx.cloud.database();
+      db.collection('feng_miao_bi_zheng').add({
+        data: {
+          userInfo,
+          totalTime,
+          record,
+        },
       });
     }
 
     this.setData({ onThisPage: false });
   },
 
-  onLoad: function() {
+  onLoad: function () {
     this._handleStart();
   },
 
-  countdown: function() {
+  _countdown: function () {
     if (!this.data.onThisPage || this.data.gameOver) return;
 
     const that = this;
-    const { openid, userInfo } = app.globalData;
+    const { userInfo } = app.globalData;
 
     if (this.data.countdown < 2) {
       if (this.data.isStart) {
-        const foo = this.data.record;
-        const bar = this.data.totalTime;
-
         this.setData({ gameOver: true, isStart: false });
-
-        post('24-points/add_challenge', {
-          openid,
-          userInfo,
-          record: foo,
-          totalTime: bar,
-          gameplay: 'TYPE_1',
+        const db = wx.cloud.database();
+        db.collection('feng_miao_bi_zheng').add({
+          data: {
+            userInfo,
+            record: this.data.record,
+            totalTime: this.data.totalTime,
+          },
         });
       }
     } else {
@@ -79,13 +78,13 @@ Page({
         totalTime: this.data.totalTime + 1,
       });
 
-      setTimeout(function() {
-        that.countdown();
+      setTimeout(function () {
+        that._countdown();
       }, 1000);
     }
   },
 
-  _handleStart: function() {
+  _handleStart: function () {
     const newCards = generateCardsAndRecommendSolution();
     this.setData({
       isStart: true,
@@ -99,10 +98,10 @@ Page({
       record: 0,
       totalTime: 0,
     });
-    this.countdown();
+    this._countdown();
   },
 
-  _selectOperator: function(e) {
+  _selectOperator: function (e) {
     const { value } = e.currentTarget.dataset;
     const { selectedOperator } = this.data;
 
@@ -111,7 +110,7 @@ Page({
     });
   },
 
-  _selectCard: function(e) {
+  _selectCard: function (e) {
     const { value, index } = e.currentTarget.dataset;
     const {
       cards,
@@ -143,7 +142,7 @@ Page({
           const answer = calculate(
             selectedCard.value,
             cards[index].value,
-            selectedOperator,
+            selectedOperator
           );
 
           Object.assign(nextState, {
@@ -158,7 +157,7 @@ Page({
             alias: noDecimal(
               nextState.cards[selectedCard.position].alias,
               nextState.cards[index].alias,
-              selectedOperator,
+              selectedOperator
             ),
           };
         }
@@ -167,9 +166,7 @@ Page({
     const isFinish =
       nextState.cards.filter(({ state }) => state === 'disable').length === 3;
 
-    const openid = app.globalData.openid;
-
-    if (isFinish && openid) {
+    if (isFinish) {
       const isCorrect = nextState.selectedCard.value === 24;
       if (isCorrect) {
         const awardTime = this._calculateAwardTime();
@@ -187,20 +184,22 @@ Page({
         this._skip();
       }
 
-      post('increaseAnswersCount', {
-        openid,
-        isCorrect,
-      }).then(res => {
-        this.setData({
-          totalOfCorrectAnswers: res.totalOfCorrectAnswers,
-          totalOfAnswers: res.totalOfAnswers,
-        });
-      });
-      post('24-points/add_question', {
-        openid,
-        isCorrect,
-        question: initialCards.map(x => x.value),
-        gameplay: 'TYPE_1',
+      // TODO:
+      // post('increaseAnswersCount', {
+      //   isCorrect,
+      // }).then((res) => {
+      //   this.setData({
+      //     totalOfCorrectAnswers: res.totalOfCorrectAnswers,
+      //     totalOfAnswers: res.totalOfAnswers,
+      //   });
+      // });
+      const db = wx.cloud.database();
+      db.collection('question').add({
+        data: {
+          isCorrect,
+          question: initialCards.map((x) => x.value),
+          gameplay: 'FENG_MIAO_BI_ZHENG',
+        },
       });
     } else {
       this.setData({
@@ -209,8 +208,8 @@ Page({
     }
   },
 
-  _reset: function(e) {
-    const resetCards = this.data.initialCards.map(x => ({
+  _reset: function (e) {
+    const resetCards = this.data.initialCards.map((x) => ({
       value: x.value,
       alias: [x.value],
       state: 'normal',
@@ -223,7 +222,7 @@ Page({
     });
   },
 
-  _calculateAwardTime: function() {
+  _calculateAwardTime: function () {
     const record = this.data.record + 1;
 
     if (record % 24 === 0) return 12 + record / 12;
@@ -232,7 +231,7 @@ Page({
     return 6;
   },
 
-  showToast: function(title, icon) {
+  showToast: function (title, icon) {
     wx.showToast({
       title,
       icon,
@@ -240,7 +239,7 @@ Page({
     });
   },
 
-  _skip: function(e) {
+  _skip: function () {
     const newCards = generateCardsAndRecommendSolution();
     this.setData({
       cards: [...newCards.cards],

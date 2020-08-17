@@ -1,3 +1,5 @@
+// 过关斩将
+
 const app = getApp();
 import {
   generateCardsAndRecommendSolution,
@@ -6,7 +8,6 @@ import {
   shareAppMessage,
 } from '../../utils/index.js';
 import { OPERATORS, OPERATORS_HASH } from '../../constants/index.js';
-import { post } from '../../api/index';
 const cardsAndRecommendSolution = generateCardsAndRecommendSolution();
 
 Page({
@@ -29,61 +30,54 @@ Page({
 
   onShareAppMessage: shareAppMessage,
 
-  onUnload: function() {
-    const { openid, userInfo } = app.globalData;
+  onUnload: function () {
+    const { userInfo } = app.globalData;
     const { gameOver, record } = this.data;
 
     if (!gameOver && record > 0) {
-      post('24-points/add_challenge', {
-        openid,
-        userInfo,
-        record,
-        gameplay: 'TYPE_2',
+      const db = wx.cloud.database();
+      db.collection('guo_guan_zhan_jiang').add({
+        data: {
+          userInfo,
+          record,
+        },
       });
     }
 
     this.setData({ onThisPage: false });
   },
 
-  onLoad: function() {
+  onLoad: function () {
     this._handleStart();
   },
 
-  countdown: function() {
+  _countdown: function () {
     if (!this.data.onThisPage || this.data.gameOver) return;
 
     const that = this;
-    const { openid, userInfo } = app.globalData;
+    const { userInfo } = app.globalData;
 
     if (this.data.countdown < 2) {
       if (this.data.isStart) {
-        const foo = this.data.record;
-
-        this.openAlert(foo);
-        post('24-points/add_question', {
-          openid,
-          isCorrect: false,
-          question: this.data.initialCards.map(x => x.value),
-          gameplay: 'TYPE_2',
-        });
-
-        post('24-points/add_challenge', {
-          openid,
-          userInfo,
-          record: foo,
-          gameplay: 'TYPE_2',
+        this.openAlert(this.data.record);
+        const db = wx.cloud.database();
+        db.collection('guo_guan_zhan_jiang').add({
+          data: {
+            userInfo,
+            record,
+          },
         });
       }
     } else {
       this.setData({ countdown: this.data.countdown - 1 });
 
-      setTimeout(function() {
-        that.countdown();
+      setTimeout(function () {
+        that._countdown();
       }, 1000);
     }
   },
 
-  _handleStart: function() {
+  _handleStart: function () {
     const newCards = generateCardsAndRecommendSolution();
     this.setData({
       isStart: true,
@@ -96,10 +90,10 @@ Page({
       countdown: 30,
       record: 0,
     });
-    this.countdown();
+    this._countdown();
   },
 
-  _selectOperator: function(e) {
+  _selectOperator: function (e) {
     const { value } = e.currentTarget.dataset;
     const { selectedOperator } = this.data;
 
@@ -108,7 +102,7 @@ Page({
     });
   },
 
-  _selectCard: function(e) {
+  _selectCard: function (e) {
     const { value, index } = e.currentTarget.dataset;
     const { cards, selectedOperator, selectedCard, initialCards } = this.data;
     if (cards[index].state === 'disable') return;
@@ -133,7 +127,7 @@ Page({
           const answer = calculate(
             selectedCard.value,
             cards[index].value,
-            selectedOperator,
+            selectedOperator
           );
 
           Object.assign(nextState, {
@@ -148,7 +142,7 @@ Page({
             alias: noDecimal(
               nextState.cards[selectedCard.position].alias,
               nextState.cards[index].alias,
-              selectedOperator,
+              selectedOperator
             ),
           };
         }
@@ -157,37 +151,38 @@ Page({
     const isFinish =
       nextState.cards.filter(({ state }) => state === 'disable').length === 3;
 
-    const openid = app.globalData.openid;
-
-    if (isFinish && openid !== '') {
+    if (isFinish) {
       const isCorrect = nextState.selectedCard.value === 24;
       if (isCorrect) {
         this._skip();
         this.setData({ record: this.data.record + 1 });
       } else {
-        const foo = this.data.record;
-        this.openAlert(foo);
-        post('24-points/add_challenge', {
-          openid,
-          userInfo: app.globalData.userInfo,
-          record: foo,
-          gameplay: 'TYPE_2',
+        this.openAlert(this.data.record);
+        const db = wx.cloud.database();
+        db.collection('guo_guan_zhan_jiang').add({
+          data: {
+            userInfo,
+            record: this.data.record,
+          },
         });
 
         this.setData({ isStart: false, gameOver: true });
       }
 
-      post('increaseAnswersCount', { openid, isCorrect }).then(res => {
-        this.setData({
-          totalOfCorrectAnswers: res.totalOfCorrectAnswers,
-          totalOfAnswers: res.totalOfAnswers,
-        });
-      });
-      post('24-points/add_question', {
-        openid,
-        isCorrect,
-        question: initialCards.map(x => x.value),
-        gameplay: 'TYPE_2',
+      // TODO:
+      // post('increaseAnswersCount', { openid, isCorrect }).then((res) => {
+      //   this.setData({
+      //     totalOfCorrectAnswers: res.totalOfCorrectAnswers,
+      //     totalOfAnswers: res.totalOfAnswers,
+      //   });
+      // });
+      const db = wx.cloud.database();
+      db.collection('question').add({
+        data: {
+          isCorrect,
+          question: initialCards.map((x) => x.value),
+          gameplay: 'GUO_GUAN_ZHAN_JIANG',
+        },
       });
     } else {
       this.setData({
@@ -196,8 +191,8 @@ Page({
     }
   },
 
-  _reset: function(e) {
-    const resetCards = this.data.initialCards.map(x => ({
+  _reset: function (e) {
+    const resetCards = this.data.initialCards.map((x) => ({
       value: x.value,
       alias: [x.value],
       state: 'normal',
@@ -210,7 +205,7 @@ Page({
     });
   },
 
-  _skip: function(e) {
+  _skip: function (e) {
     const newCards = generateCardsAndRecommendSolution();
     this.setData({
       cards: [...newCards.cards],
@@ -222,7 +217,7 @@ Page({
     });
   },
 
-  openAlert: function(record) {
+  openAlert: function (record) {
     this.setData({
       gameOver: true,
       isStart: false,
