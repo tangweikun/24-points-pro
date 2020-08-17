@@ -1,3 +1,5 @@
+// 对战排名
+
 const app = getApp();
 import { formatTime, shareAppMessage } from '../../utils/index.js';
 import { post } from '../../api/index';
@@ -9,12 +11,12 @@ Page({
 
   onShareAppMessage: shareAppMessage,
 
-  onLoad: function() {
+  onLoad: function () {
     const { openid, battleList } = app.globalData;
     this.setData({ battleList });
     if (openid) {
-      post('getMyBattleList', { openid }).then(res => {
-        app.globalData.battleList = res.map(x => ({
+      post('getMyBattleList', { openid }).then((res) => {
+        app.globalData.battleList = res.map((x) => ({
           ...x,
           createdAt: formatTime(x.createdAt),
         }));

@@ -1,3 +1,5 @@
+// 随便玩玩
+
 const app = getApp();
 
 import {
@@ -6,7 +8,6 @@ import {
   calculate,
   shareAppMessage,
 } from '../../utils/index.js';
-import { post } from '../../api/index';
 import { OPERATORS, OPERATORS_HASH } from '../../constants/index.js';
 import { RULE } from '../../constants/index.js';
 const cardsAndRecommendSolution = generateCardsAndRecommendSolution();
@@ -25,24 +26,21 @@ Page({
 
   onShareAppMessage: shareAppMessage,
 
-  _onAdd: function() {
-
-  },
-
-  _goProfile: function() {
+  _goProfile: function () {
     wx.navigateTo({ url: '/pages/index/index' });
   },
 
-  _showRule: function() {
+  // 显示规则
+  _showRule: function () {
     wx.showModal({
       showCancel: false,
       title: '规则',
       content: RULE,
-      success: function(res) {},
     });
   },
 
-  _selectOperator: function(e) {
+  // 选择操作符
+  _selectOperator: function (e) {
     const { value } = e.currentTarget.dataset;
     const { selectedOperator } = this.data;
 
@@ -51,16 +49,17 @@ Page({
     });
   },
 
-  _showSolution: function() {
+  // 显示推荐算法
+  _showSolution: function () {
     wx.showModal({
       showCancel: false,
       title: '推荐算法',
       content: this.data.recommendSolution,
-      success: function(res) {},
     });
   },
 
-  _selectCard: function(e) {
+  // 选择卡牌
+  _selectCard: function (e) {
     const { value, index, state } = e.currentTarget.dataset;
     const { cards, selectedOperator, selectedCard, initialCards } = this.data;
 
@@ -96,7 +95,7 @@ Page({
             alias: noDecimal(
               nextState.cards[selectCardPosition].alias,
               nextState.cards[index].alias,
-              selectedOperator,
+              selectedOperator
             ),
           };
         }
@@ -111,26 +110,19 @@ Page({
 
     if (isFinish) {
       const isCorrect = nextState.selectedCard.value === 24;
-      const db = wx.cloud.database()
+      const db = wx.cloud.database();
       db.collection('game0_record').add({
         data: {
-          isCorrect
-        }
-      })
-      db.collection('question').add({
-        data:{
           isCorrect,
-          question: initialCards.map(x => x.value),
+        },
+      });
+      db.collection('question').add({
+        data: {
+          isCorrect,
+          question: initialCards.map((x) => x.value),
           gameplay: 'TYPE_0',
-        }
-      })
-      // post('increaseAnswersCount', { openid, isCorrect });
-      // post('24-points/add_question', {
-      //   openid,
-      //   isCorrect,
-      //   question: initialCards.map(x => x.value),
-      //   gameplay: 'TYPE_0',
-      // });
+        },
+      });
     }
 
     if (isFinish && nextState.selectedCard.value === 24) {
@@ -140,8 +132,8 @@ Page({
     }
   },
 
-  _reset: function() {
-    const resetCards = this.data.initialCards.map(x => ({
+  _reset: function () {
+    const resetCards = this.data.initialCards.map((x) => ({
       value: x.value,
       alias: [x.value],
       state: 'normal',
@@ -155,7 +147,7 @@ Page({
     });
   },
 
-  _skip: function(e) {
+  _skip: function (e) {
     const { cards, recommendSolution } = generateCardsAndRecommendSolution();
     this.setData({
       cards,
