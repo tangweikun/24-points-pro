@@ -12,12 +12,12 @@ Page({
         isReady: true,
         isHot: false,
       },
-      // {
-      //   text: '排行榜',
-      //   url: '/pages/ranking/index',
-      //   isReady: true,
-      //   isHot: false,
-      // },
+      {
+        text: '排行榜',
+        url: '/pages/ranking/index',
+        isReady: true,
+        isHot: false,
+      },
       // {
       //   text: '王者对战',
       //   url: '/pages/gameplay-3/index',
@@ -51,7 +51,21 @@ Page({
     ],
   },
 
-  onLoad: function() {},
+  onLoad: function () {
+    // 获取用户信息
+    wx.getSetting({
+      success: (res) => {
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+          wx.getUserInfo({
+            success: (res) => {
+              app.globalData.userInfo = res.userInfo
+            },
+          });
+        }
+      },
+    });
+  },
 
   onShareAppMessage: shareAppMessage,
 
@@ -67,25 +81,25 @@ Page({
   //   }
   // },
 
-  _showRule: function() {
+  _showRule: function () {
     wx.showModal({
       showCancel: false,
       title: '规则',
       content: RULE,
-      success: function(res) {},
+      success: function (res) { },
     });
   },
 
-  _showGameplay: function() {
+  _showGameplay: function () {
     wx.showModal({
       showCancel: false,
       title: '玩法',
       content: GAMEPLAY,
-      success: function(res) {},
+      success: function (res) { },
     });
   },
 
-  _goNewPage: function(e) {
+  _goNewPage: function (e) {
     const { url, ready } = e.currentTarget.dataset;
 
     if (ready) {

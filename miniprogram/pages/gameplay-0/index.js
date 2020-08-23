@@ -114,13 +114,15 @@ Page({
       db.collection('game0_record').add({
         data: {
           isCorrect,
+          createdAt: new Date()
         },
       });
       db.collection('question').add({
         data: {
           isCorrect,
+          createdAt: new Date(),
           question: initialCards.map((x) => x.value),
-          gameplay: 'TYPE_0',
+          gameplay: 'SUI_BIAN_WAN_WAN',
         },
       });
     }

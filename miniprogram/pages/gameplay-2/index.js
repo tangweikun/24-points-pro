@@ -38,6 +38,7 @@ Page({
       const db = wx.cloud.database();
       db.collection('guo_guan_zhan_jiang').add({
         data: {
+          createdAt: new Date(),
           userInfo,
           record,
         },
@@ -63,8 +64,9 @@ Page({
         const db = wx.cloud.database();
         db.collection('guo_guan_zhan_jiang').add({
           data: {
+            createdAt: new Date(),
             userInfo,
-            record,
+            record: this.data.record,
           },
         });
       }
@@ -161,7 +163,8 @@ Page({
         const db = wx.cloud.database();
         db.collection('guo_guan_zhan_jiang').add({
           data: {
-            userInfo,
+            createdAt: new Date(),
+            userInfo: app.globalData.userInfo,
             record: this.data.record,
           },
         });
@@ -179,6 +182,7 @@ Page({
       const db = wx.cloud.database();
       db.collection('question').add({
         data: {
+          createdAt: new Date(),
           isCorrect,
           question: initialCards.map((x) => x.value),
           gameplay: 'GUO_GUAN_ZHAN_JIANG',

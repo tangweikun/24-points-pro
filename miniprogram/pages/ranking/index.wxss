@@ -1,5 +1,5 @@
 .scroll-wrapper {
-  margin-top: 250rpx;
+  margin-top: 120rpx;
   height: 100%;
   width: 100%;
 }
@@ -30,6 +30,7 @@
 
 .tab-active {
   color: #ffffff;
+  font-weight: bold;
 }
 
 .tab-right {

@@ -23,7 +23,7 @@ Page({
     totalOfAnswers: 0,
     totalOfCorrectAnswers: 0,
     isStart: false,
-    countdown: 100,
+    countdown: 60,
     record: 0,
     totalTime: 0,
     gameOver: false,
@@ -40,6 +40,7 @@ Page({
       const db = wx.cloud.database();
       db.collection('feng_miao_bi_zheng').add({
         data: {
+          createdAt: new Date(),
           userInfo,
           totalTime,
           record,
@@ -67,6 +68,7 @@ Page({
         db.collection('feng_miao_bi_zheng').add({
           data: {
             userInfo,
+            createdAt: new Date(),
             record: this.data.record,
             totalTime: this.data.totalTime,
           },
@@ -94,7 +96,7 @@ Page({
       recommendSolution: newCards.recommendSolution,
       selectedCard: null,
       selectedOperator: null,
-      countdown: 100,
+      countdown: 60,
       record: 0,
       totalTime: 0,
     });
@@ -197,6 +199,7 @@ Page({
       db.collection('question').add({
         data: {
           isCorrect,
+          createdAt: new Date(),
           question: initialCards.map((x) => x.value),
           gameplay: 'FENG_MIAO_BI_ZHENG',
         },
@@ -225,10 +228,19 @@ Page({
   _calculateAwardTime: function () {
     const record = this.data.record + 1;
 
-    if (record % 24 === 0) return 12 + record / 12;
-    if (record <= 6) return 10;
-    if (record <= 16) return 8;
-    return 6;
+    if (record > 50) {
+      return 5
+    }
+    if (record > 30) {
+      return 6
+    }
+    if (record > 20) {
+      return 7
+    }
+    if (record > 5) {
+      return 8
+    }
+    return 10
   },
 
   showToast: function (title, icon) {
