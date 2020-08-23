@@ -34,6 +34,8 @@ Page({
       }
     })
 
+
+
     // const { guoGuanZhanJiangList, fenMiaobiZhengList, openid } = app.globalData;
 
     // const myRankInfo1 = guoGuanZhanJiangList.find(x => x.openid === openid) || null;

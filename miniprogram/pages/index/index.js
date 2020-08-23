@@ -42,12 +42,12 @@ Page({
       //   isReady: true,
       //   isHot: false,
       // },
-      // {
-      //   text: '我的战绩',
-      //   url: '/pages/profile/index',
-      //   isReady: true,
-      //   isHot: true,
-      // },
+      {
+        text: '我的战绩',
+        url: '/pages/profile/index',
+        isReady: true,
+        isHot: true,
+      },
     ],
   },
 

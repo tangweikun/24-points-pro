@@ -16,7 +16,7 @@
     </view> -->
   </view>
   <scroll-view class="scroll-wrapper" scroll-y>
-    <custom-card theme="THEME2" wx:for="{{tabIndex === 1 ? guoGuanZhanJiangList : fenMiaobiZhengList}}" wx:key="index" rank="{{index + 1}}" avatarUrl="{{item.userInfo.avatarUrl}}" nickName="{{item.userInfo.nickName}}" record="{{item.record}}"></custom-card>
+    <custom-card theme="THEME2" wx:for="{{tabIndex === 1 ? guoGuanZhanJiangList : fenMiaobiZhengList}}" wx:key="index" rank="{{index + 1}}" avatarUrl="{{item.userInfo ? item.userInfo.avatarUrl : 'https://wx.qlogo.cn/mmopen/vi_32/eXrWeb45sjCs0Z0teC8WDU5VFdYGt5BAbYZOf0JicOSlK94BOWj6NgjUbCE1Adx6Kria0FVLxya3JkLn2DQicDpPA/132'}}" nickName="{{item.userInfo ? item.userInfo.nickName: '神秘人'}}" record="{{item.record}}"></custom-card>
   </scroll-view>
   <!-- <view class="ad-wrapper">
     <ad unit-id="adunit-e989c465de072824"></ad>
