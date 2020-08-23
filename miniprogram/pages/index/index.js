@@ -1,13 +1,54 @@
-//index.js
 const app = getApp();
+import { shareAppMessage } from '../../utils/index';
+import { RULE, GAMEPLAY } from '../../constants/index.js';
 
 Page({
   data: {
-    avatarUrl: './user-unlogin.png',
-    userInfo: {},
-    logged: false,
-    takeSession: false,
-    requestResult: '',
+    isAuthorized: false,
+    gamePlay: [
+      {
+        text: '随便玩玩',
+        url: '/pages/gameplay-0/index',
+        isReady: true,
+        isHot: false,
+      },
+      {
+        text: '排行榜',
+        url: '/pages/ranking/index',
+        isReady: true,
+        isHot: false,
+      },
+      // {
+      //   text: '王者对战',
+      //   url: '/pages/gameplay-3/index',
+      //   isReady: true,
+      //   isHot: false,
+      // },
+      {
+        text: '过关斩将',
+        url: '/pages/gameplay-2/index',
+        isReady: true,
+        isHot: false,
+      },
+      {
+        text: '分秒必争',
+        url: '/pages/gameplay-1/index',
+        isReady: true,
+        isHot: false,
+      },
+      // {
+      //   text: '对战历史',
+      //   url: '/pages/battle-list/index',
+      //   isReady: true,
+      //   isHot: false,
+      // },
+      // {
+      //   text: '我的战绩',
+      //   url: '/pages/profile/index',
+      //   isReady: true,
+      //   isHot: true,
+      // },
+    ],
   },
 
   onLoad: function () {
@@ -18,10 +59,7 @@ Page({
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
           wx.getUserInfo({
             success: (res) => {
-              this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo,
-              });
+              app.globalData.userInfo = res.userInfo
             },
           });
         }
@@ -29,83 +67,43 @@ Page({
     });
   },
 
-  // 获取用户信息
-  onGetUserInfo: function (e) {
-    if (!this.data.logged && e.detail.userInfo) {
-      this.setData({
-        logged: true,
-        avatarUrl: e.detail.userInfo.avatarUrl,
-        userInfo: e.detail.userInfo,
-      });
+  onShareAppMessage: shareAppMessage,
+
+  // bindGetUserInfo: function(e) {
+  //   app.globalData.userInfo = e.detail.userInfo;
+  //   app.globalData.isAuthorized = true;
+  //   this.setData({ isAuthorized: true });
+  //   if (app.globalData.openid) {
+  //     post('updateUserInfo', {
+  //       openid: app.globalData.openid,
+  //       userInfo: e.detail.userInfo,
+  //     });
+  //   }
+  // },
+
+  _showRule: function () {
+    wx.showModal({
+      showCancel: false,
+      title: '规则',
+      content: RULE,
+      success: function (res) { },
+    });
+  },
+
+  _showGameplay: function () {
+    wx.showModal({
+      showCancel: false,
+      title: '玩法',
+      content: GAMEPLAY,
+      success: function (res) { },
+    });
+  },
+
+  _goNewPage: function (e) {
+    const { url, ready } = e.currentTarget.dataset;
+
+    if (ready) {
+      wx.navigateTo({ url });
     }
-  },
-
-  // 调用云函数
-  onGetOpenid: function () {
-    wx.cloud.callFunction({
-      name: 'login',
-      data: {},
-      success: (res) => {
-        console.log('[云函数] [login] user openid: ', res.result.openid);
-        app.globalData.openid = res.result.openid;
-        wx.navigateTo({
-          url: '../userConsole/userConsole',
-        });
-      },
-      fail: (err) => {
-        console.error('[云函数] [login] 调用失败', err);
-        wx.navigateTo({
-          url: '../deployFunctions/deployFunctions',
-        });
-      },
-    });
-  },
-
-  // 上传图片
-  doUpload: function () {
-    // 选择图片
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: function (res) {
-        wx.showLoading({
-          title: '上传中',
-        });
-
-        const filePath = res.tempFilePaths[0];
-
-        // 上传图片
-        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0];
-        wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-          success: (res) => {
-            console.log('[上传文件] 成功：', res);
-
-            app.globalData.fileID = res.fileID;
-            app.globalData.cloudPath = cloudPath;
-            app.globalData.imagePath = filePath;
-
-            wx.navigateTo({
-              url: '../storageConsole/storageConsole',
-            });
-          },
-          fail: (e) => {
-            console.error('[上传文件] 失败：', e);
-            wx.showToast({
-              icon: 'none',
-              title: '上传失败',
-            });
-          },
-          complete: () => {
-            wx.hideLoading();
-          },
-        });
-      },
-      fail: (e) => {
-        console.error(e);
-      },
-    });
   },
 });
