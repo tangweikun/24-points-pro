@@ -31,3 +31,4 @@
   https://github.com/233point/applet
   https://juejin.im/post/6844903602687836174
   https://juejin.im/post/6844903616956858376
+  https://github.com/zerosoul/honeyed-words-generator/blob/master/src/index.js
