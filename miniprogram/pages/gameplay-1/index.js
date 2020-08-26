@@ -38,6 +38,7 @@ Page({
 
     if (!gameOver && record > 0) {
       const db = wx.cloud.database();
+      // ADD_FMBZ
       db.collection('feng_miao_bi_zheng').add({
         data: {
           createdAt: new Date(),
@@ -65,6 +66,7 @@ Page({
       if (this.data.isStart) {
         this.setData({ gameOver: true, isStart: false });
         const db = wx.cloud.database();
+        // ADD_FMBZ
         db.collection('feng_miao_bi_zheng').add({
           data: {
             userInfo,
@@ -196,6 +198,7 @@ Page({
       //   });
       // });
       const db = wx.cloud.database();
+      // ADD_QUESTION
       db.collection('question').add({
         data: {
           isCorrect,
@@ -228,26 +231,18 @@ Page({
   _calculateAwardTime: function () {
     const record = this.data.record + 1;
 
-    if (record > 50) {
-      return 5
-    }
-    if (record > 30) {
-      return 6
-    }
-    if (record > 20) {
-      return 7
-    }
     if (record > 5) {
-      return 8
+      return 5;
     }
-    return 10
+
+    return 7;
   },
 
   showToast: function (title, icon) {
     wx.showToast({
       title,
       icon,
-      duration: 800,
+      duration: 400,
     });
   },
 

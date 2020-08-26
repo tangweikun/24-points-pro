@@ -36,6 +36,7 @@ Page({
 
     if (!gameOver && record > 0) {
       const db = wx.cloud.database();
+      // ADD_GGZJ
       db.collection('guo_guan_zhan_jiang').add({
         data: {
           createdAt: new Date(),
@@ -62,6 +63,7 @@ Page({
       if (this.data.isStart) {
         this.openAlert(this.data.record);
         const db = wx.cloud.database();
+        // ADD_GGZJ
         db.collection('guo_guan_zhan_jiang').add({
           data: {
             createdAt: new Date(),
@@ -161,6 +163,7 @@ Page({
       } else {
         this.openAlert(this.data.record);
         const db = wx.cloud.database();
+        // ADD_GGZJ
         db.collection('guo_guan_zhan_jiang').add({
           data: {
             createdAt: new Date(),
@@ -180,6 +183,7 @@ Page({
       //   });
       // });
       const db = wx.cloud.database();
+      // ADD_QUESTION
       db.collection('question').add({
         data: {
           createdAt: new Date(),
