@@ -59,46 +59,49 @@ Page({
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
           wx.getUserInfo({
             success: (res) => {
-              app.globalData.userInfo = res.userInfo
+              app.globalData.userInfo = res.userInfo;
             },
           });
         }
       },
     });
+
+    this._onGetOpenid();
   },
 
   onShareAppMessage: shareAppMessage,
 
-  // bindGetUserInfo: function(e) {
-  //   app.globalData.userInfo = e.detail.userInfo;
-  //   app.globalData.isAuthorized = true;
-  //   this.setData({ isAuthorized: true });
-  //   if (app.globalData.openid) {
-  //     post('updateUserInfo', {
-  //       openid: app.globalData.openid,
-  //       userInfo: e.detail.userInfo,
-  //     });
-  //   }
-  // },
+  // 获取openid
+  _onGetOpenid: function () {
+    wx.cloud.callFunction({
+      name: 'login',
+      data: {},
+      success: (res) => {
+        app.globalData.openid = res.result.openid;
+      },
+    });
+  },
 
+  // 显示规则
   _showRule: function () {
     wx.showModal({
       showCancel: false,
       title: '规则',
       content: RULE,
-      success: function (res) { },
+      success: function (res) {},
     });
   },
 
+  // 显示玩法
   _showGameplay: function () {
     wx.showModal({
       showCancel: false,
       title: '玩法',
       content: GAMEPLAY,
-      success: function (res) { },
     });
   },
 
+  // 跳转到新页面
   _goNewPage: function (e) {
     const { url, ready } = e.currentTarget.dataset;
 

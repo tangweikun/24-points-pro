@@ -111,12 +111,8 @@ Page({
     if (isFinish) {
       const isCorrect = nextState.selectedCard.value === 24;
       const db = wx.cloud.database();
-      db.collection('game0_record').add({
-        data: {
-          isCorrect,
-          createdAt: new Date()
-        },
-      });
+
+      // ADD_QUESTION
       db.collection('question').add({
         data: {
           isCorrect,

@@ -12,58 +12,11 @@ Page({
     tabIndex: 1,
   },
 
-  _setRanking: function () {
-    const db = wx.cloud.database()
-    db.collection('guo_guan_zhan_jiang').where({
-      record: db.command.gt(0)
-    }).orderBy('record', 'desc').limit(20).get({
-      success: res => {
-        this.setData({
-          guoGuanZhanJiangList: res.data
-        })
-      }
-    })
-
-    db.collection('feng_miao_bi_zheng').where({
-      record: db.command.gt(0)
-    }).orderBy('record', 'desc').limit(20).get({
-      success: res => {
-        this.setData({
-          fenMiaobiZhengList: res.data
-        })
-      }
-    })
-
-
-
-    // const { guoGuanZhanJiangList, fenMiaobiZhengList, openid } = app.globalData;
-
-    // const myRankInfo1 = guoGuanZhanJiangList.find(x => x.openid === openid) || null;
-    // const myRankInfo2 = fenMiaobiZhengList.find(x => x.openid === openid) || null;
-    // const myRank1 = guoGuanZhanJiangList.findIndex(x => x.openid === openid) || null;
-    // const myRank2 = fenMiaobiZhengList.findIndex(x => x.openid === openid) || null;
-
-    // this.setData({
-    //   guoGuanZhanJiangList: guoGuanZhanJiangList.slice(0, 100),
-    //   fenMiaobiZhengList: fenMiaobiZhengList.slice(0, 100),
-    //   myRankInfo1,
-    //   myRankInfo2,
-    //   myRank1,
-    //   myRank2,
-    // });
-  },
-
   onLoad: function () {
-    const { guoGuanZhanJiangList, fenMiaobiZhengList } = this.data;
-    this._setRanking()
-    // if (guoGuanZhanJiangList.length === 0 || fenMiaobiZhengList.length === 0) {
-    //   this._showAndCloseLoading();
-
-    //   setTimeout(() => this._setRanking(), 1000);
-    // } else {
-    //   this._setRanking();
-    // }
+    this._setRanking();
   },
+
+  onShareAppMessage: shareAppMessage,
 
   _showAndCloseLoading: function () {
     wx.showLoading({ title: '加载中' });
@@ -79,5 +32,36 @@ Page({
     }
   },
 
-  onShareAppMessage: shareAppMessage,
+  _setRanking: function () {
+    const db = wx.cloud.database();
+    // GET_GGZJ_RANK_LIST
+    db.collection('guo_guan_zhan_jiang')
+      .where({
+        record: db.command.gt(0),
+      })
+      .orderBy('record', 'desc')
+      .limit(20)
+      .get({
+        success: (res) => {
+          this.setData({
+            guoGuanZhanJiangList: res.data,
+          });
+        },
+      });
+
+    // GET_FMBZ_RANK_LIST
+    db.collection('feng_miao_bi_zheng')
+      .where({
+        record: db.command.gt(0),
+      })
+      .orderBy('record', 'desc')
+      .limit(20)
+      .get({
+        success: (res) => {
+          this.setData({
+            fenMiaobiZhengList: res.data,
+          });
+        },
+      });
+  },
 });

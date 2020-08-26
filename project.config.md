@@ -1,6 +1,7 @@
+```json
 {
   "miniprogramRoot": "miniprogram/",
-  "cloudfunctionRoot": "cloudfunctions/",
+  "cloudfunctionRoot": "cloudfunctions/", // 指定存放云函数的目录
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -61,3 +62,4 @@
     }
   }
 }
+```
